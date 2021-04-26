@@ -67,23 +67,30 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-
     if (!body.name) {
-        response.status(404).json({
+        response.status(400).json({
             error: 'name missing'
         })
-    } 
+    } else if (!body.number) {
+        response.status(400).json({
+            error: 'number missing'
+        })
 
+    } else if (persons.map(p => p.name.toLowerCase().trim()).includes(body.name.toLowerCase().trim())) {
+        response.status(400).json({
+            error: 'name must be unique'
+        })
+    } else {
     const person = {
         id: Math.floor(Math.random()*1000),
         name: body.name, 
         number: body.number
-    
     }
 
     persons = persons.concat(person)
-
     response.json(person)
+    }
+
 
 
 
