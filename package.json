@@ -1,0 +1,19 @@
+{
+  "name": "phonebook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anirudhkannan9/part3_phonebook.git"
+  },
+  "author": "Anirudh Kannan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/anirudhkannan9/part3_phonebook/issues"
+  },
+  "homepage": "https://github.com/anirudhkannan9/part3_phonebook#readme"
+}
