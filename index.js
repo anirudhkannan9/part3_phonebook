@@ -1,6 +1,7 @@
 const express = require('express')
 //built-in library to make using Node's http module easier to use and scale
 const app = express()
+app.use(express.json())
 
 let persons = [
     {
@@ -59,6 +60,33 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(p => p.id !== Number(request.params.id))
     response.status(204).end()
+
+})
+
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+
+    if (!body.name) {
+        response.status(404).json({
+            error: 'name missing'
+        })
+    } 
+
+    const person = {
+        id: Math.floor(Math.random()*1000),
+        name: body.name, 
+        number: body.number
+    
+    }
+
+    persons = persons.concat(person)
+
+    response.json(person)
+
+
+
 
 })
 
