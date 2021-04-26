@@ -2,7 +2,7 @@ const express = require('express')
 //built-in library to make using Node's http module easier to use and scale
 const app = express()
 
-const persons = [
+let persons = [
     {
         id: 1, 
         name: "Arto Hellas", 
@@ -54,6 +54,12 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
     }
    
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+    persons = persons.filter(p => p.id !== Number(request.params.id))
+    response.status(204).end()
+
 })
 
 const PORT = 3001
