@@ -11,9 +11,20 @@ const app = express()
 //function: takes raw data from request object, parses into JSON and attaches that to request object as a new property 'body' 
 app.use(express.json())
 
-//taking morgan middleware into use (morgan's 'tiny' configuration)
-app.use(morgan('tiny'))
+//creating new morgan token representing the body of the request that's sent (e.g. newPersonObject when sending POST request to add new contact to phonebook)
+morgan.token('body', function(req, res) {return JSON.stringify(req.body)})
 
+//taking morgan middleware into use, custom configuration including body of request
+app.use(morgan(function (tokens, req, res) {
+    return [
+        tokens.method(req, res),
+        tokens.url(req, res), 
+        tokens.status(req, res),
+        tokens.res(req, res, 'content-length'), '-',
+        tokens['response-time'](req, res), 'ms', 
+        tokens.body(req, res)
+    ].join(' ')
+}))
 
 let persons = [
     {
