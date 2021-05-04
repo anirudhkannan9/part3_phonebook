@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 //built-in library to make using Node's http module easier to use and scale
 const app = express()
 
@@ -10,6 +11,12 @@ const app = express()
 //taking json-parser middleware into use
 //function: takes raw data from request object, parses into JSON and attaches that to request object as a new property 'body' 
 app.use(express.json())
+
+//middleware: whenever express gets an HTTP GET request it will first check if the build directory contains a page corresponding to the request address. If Y -> returns it
+app.use(express.static('build'))
+
+//taking into use middleware that allows requests from all origins (e.g. frontend from localhost:3000)
+app.use(cors())
 
 //creating new morgan token representing the body of the request that's sent (e.g. newPersonObject when sending POST request to add new contact to phonebook)
 morgan.token('body', function(req, res) {return JSON.stringify(req.body)})
