@@ -1,4 +1,3 @@
-//import Mongoose; 'object-document mapper' library that helps save JS objects as Mongo docs
 const mongoose = require('mongoose')
 
 //password: ak12ak12 (not the same as my MongoDB Atlas account password; this is just to access the dbs programatically)

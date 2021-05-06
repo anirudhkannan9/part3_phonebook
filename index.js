@@ -1,8 +1,11 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 //built-in library to make using Node's http module easier to use and scale
 const app = express()
+
+const Person = require('./models/person')
 
 //middleware: functions that we can use to handle request and response objects
 // use before route so they're executed before route event handlers are called
@@ -14,6 +17,7 @@ app.use(express.json())
 
 //middleware: whenever express gets an HTTP GET request it will first check if the build directory contains a page corresponding to the request address. If Y -> returns it
 app.use(express.static('build'))
+
 
 //taking into use middleware that allows requests from all origins (e.g. frontend from localhost:3000)
 app.use(cors())
@@ -66,7 +70,11 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person
+        .find({})
+        .then(persons => {
+            response.json(persons)
+        })
 })
 
 app.get('/info', (request, response) => {
@@ -130,7 +138,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
