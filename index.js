@@ -78,9 +78,13 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    var info = `Phonebook has info for ${persons.length} people` 
-    var date = `<br/> <br/> ${new Date()}`
-    response.send(info + date)
+    Person
+        .find({})
+        .then(persons => {
+            var info = `Phonebook has info for ${persons.length} people`
+            var date = `<br/> <br/> ${ new Date() }`
+            response.send(info + date)
+        })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -114,21 +118,18 @@ app.post('/api/persons', (request, response) => {
             error: 'number missing'
         })
 
-    } else if (persons.map(p => p.name.toLowerCase().trim()).includes(body.name.toLowerCase().trim())) {
-        response.status(400).json({
-            error: 'name must be unique'
-        })
     } else {
-    const person = {
-        id: Math.floor(Math.random()*1000),
+    const person = new Person({
         name: body.name, 
         number: body.number
-    }
+    })
 
-    persons = persons.concat(person)
-    response.json(person)
+    person
+        .save()
+        .then(savedPerson => {
+            response.json(savedPerson)
+        })
     }
-
 })
 
 //middleware for catching + dealing with error requests made to non-existent routes

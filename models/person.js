@@ -19,9 +19,10 @@ const personSchema = new mongoose.Schema({
     number: String
 })
 
-//changing how returned contacts in phonebook are presented as JSON in frontend; differs implicitly from course content in that we're outright deleting _id property
+//changing how returned contacts in phonebook are presented as JSON in frontend
 personSchema.set('toJSON', {
     transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
         delete returnedObject.__v
     }
