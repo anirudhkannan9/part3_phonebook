@@ -99,7 +99,7 @@ app.get('/api/persons/:id', (request, response, next) => {
    
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     Person
         .findByIdAndRemove(request.params.id)
         .then(result => {
@@ -134,6 +134,23 @@ app.post('/api/persons', (request, response) => {
             response.json(savedPerson)
         })
     }
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    //Not using Person constructor because findByIdAndUpdate receives a regular JS object
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person
+        .findByIdAndUpdate(request.params.id, person, { new: true })
+        .then(updatedPerson => {
+            response.json(updatedPerson)
+        })
+        .catch(error => next(error))
 })
 
 //middleware for catching + dealing with error requests made to non-existent routes
