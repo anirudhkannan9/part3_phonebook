@@ -37,31 +37,31 @@ app.use(morgan(function (tokens, req, res) {
     ].join(' ')
 }))
 
-let persons = [
-    {
-        id: 1, 
-        name: "Arto Hellas", 
-        number: "040-123456" 
+// let persons = [
+//     {
+//         id: 1, 
+//         name: "Arto Hellas", 
+//         number: "040-123456" 
 
-    }, 
-    {
-        id: 2,
-        name: "Ada Lovelace",
-        number: "39-44-5323523"
+//     }, 
+//     {
+//         id: 2,
+//         name: "Ada Lovelace",
+//         number: "39-44-5323523"
 
-    }, 
-    {
-        id: 3,
-        name: "Dan Abramov", 
-        number: "12-43-234345"
+//     }, 
+//     {
+//         id: 3,
+//         name: "Dan Abramov", 
+//         number: "12-43-234345"
 
-    }, 
-    {
-        id: 4, 
-        name: "Mary Poppendieck", 
-        number: "39-23-6423122"
-    }
-]
+//     }, 
+//     {
+//         id: 4, 
+//         name: "Mary Poppendieck", 
+//         number: "39-23-6423122"
+//     }
+// ]
 
 //routes
 //event handler used to handle HTTP GET requests made to app's / root
@@ -77,7 +77,7 @@ app.get('/api/persons', (request, response) => {
         })
 })
 
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
     Person
         .find({})
         .then(persons => {
@@ -85,18 +85,16 @@ app.get('/info', (request, response) => {
             var date = `<br/> <br/> ${ new Date() }`
             response.send(info + date)
         })
+        .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
-    const id = Number(request.params.id)
-    const person = persons.find(p => p.id === id)
-
-    if (person) {
-        response.json(person)
-    } else {
-        response.status(404).end()
-    }
-   
+    Person
+        .findById(request.params.id)
+        .then(person => {
+            response.json(person)
+        })
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
