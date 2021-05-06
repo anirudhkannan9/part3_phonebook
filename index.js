@@ -87,7 +87,7 @@ app.get('/info', (request, response) => {
         })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     const id = Number(request.params.id)
     const person = persons.find(p => p.id === id)
 
@@ -105,10 +105,7 @@ app.delete('/api/persons/:id', (request, response) => {
         .then(result => {
             response.status(204).end()
         })
-        .catch(error => {
-            console.log(error)
-            response.status(400).send({ error: 'malformatted id' })
-        })
+        .catch(error => next(error))
 
 })
 
@@ -145,6 +142,21 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
+
+//Express error handling middleware is defined as a function with 4 parameters
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    //in all other cases, pass the error forward to the default Express error handler
+    next(error)
+}
+
+//Taken into use last because otherwise all requests would be handled as if they were errors
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
