@@ -100,8 +100,15 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    persons = persons.filter(p => p.id !== Number(request.params.id))
-    response.status(204).end()
+    Person
+        .findByIdAndRemove(request.params.id)
+        .then(result => {
+            response.status(204).end()
+        })
+        .catch(error => {
+            console.log(error)
+            response.status(400).send({ error: 'malformatted id' })
+        })
 
 })
 
