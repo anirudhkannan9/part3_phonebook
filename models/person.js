@@ -1,5 +1,6 @@
 //import Mongoose; 'object-document mapper' library that helps save JS objects as Mongo docs
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
 
 const url = process.env.MONGODB_URI
 
@@ -15,9 +16,15 @@ mongoose
     })
 
 const personSchema = new mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        unique: true
+    },
     number: String
 })
+
+//Apply uniqueValidator plugin to personSchema
+personSchema.plugin(uniqueValidator)
 
 //changing how returned contacts in phonebook are presented as JSON in frontend
 personSchema.set('toJSON', {
